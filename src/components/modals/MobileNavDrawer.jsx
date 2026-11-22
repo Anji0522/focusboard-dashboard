@@ -1,12 +1,12 @@
 import React, { useEffect } from 'react';
-import { X, Sparkles, LayoutDashboard, CheckSquare, FolderKanban, BarChart3, Settings, RotateCcw } from 'lucide-react';
+import { X, Sparkles, LayoutGrid, ListTodo, Calendar, Settings, RotateCcw } from 'lucide-react';
 import { useTaskManager } from '../../context/TaskContext';
 
-export const MobileNavDrawer: React.FC = () => {
+export const MobileNavDrawer = () => {
   const { isMobileNavOpen, setIsMobileNavOpen, stats, resetToDefaultData } = useTaskManager();
 
   useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
+    const handleKeyDown = (e) => {
       if (e.key === 'Escape' && isMobileNavOpen) {
         setIsMobileNavOpen(false);
       }
@@ -18,10 +18,9 @@ export const MobileNavDrawer: React.FC = () => {
   if (!isMobileNavOpen) return null;
 
   const navItems = [
-    { label: 'Dashboard', icon: LayoutDashboard, active: true, count: null },
-    { label: 'Tasks', icon: CheckSquare, active: false, count: stats.total },
-    { label: 'Projects', icon: FolderKanban, active: false, count: 4, placeholder: true },
-    { label: 'Analytics', icon: BarChart3, active: false, count: null, placeholder: true },
+    { label: 'Overview', icon: LayoutGrid, active: true, count: null },
+    { label: 'My tasks', icon: ListTodo, active: false, count: stats.total },
+    { label: 'Calendar', icon: Calendar, active: false, count: null, placeholder: true },
     { label: 'Settings', icon: Settings, active: false, count: null, placeholder: true },
   ];
 
@@ -41,7 +40,7 @@ export const MobileNavDrawer: React.FC = () => {
           {/* Drawer Header */}
           <div className="h-16 flex items-center justify-between px-6 border-b border-slate-100">
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-xl bg-indigo-600 flex items-center justify-center text-white shadow-sm">
+              <div className="w-8 h-8 rounded-xl bg-[#4F46E5] flex items-center justify-center text-white shadow-sm">
                 <Sparkles className="w-4 h-4" />
               </div>
               <span className="font-bold text-base tracking-tight text-slate-900">FocusBoard</span>
@@ -59,7 +58,7 @@ export const MobileNavDrawer: React.FC = () => {
           {/* Navigation Links */}
           <nav className="p-4 space-y-1">
             <div className="px-3 py-2 text-[10px] font-bold tracking-wider text-slate-400 uppercase">
-              Menu
+              WORKSPACE
             </div>
             {navItems.map((item) => {
               const Icon = item.icon;
@@ -94,7 +93,7 @@ export const MobileNavDrawer: React.FC = () => {
           <button
             type="button"
             onClick={() => {
-              if (window.confirm('Reset all task data back to default sample state?')) {
+              if (window.confirm('Reset all task data back to Figma sample state?')) {
                 resetToDefaultData();
                 setIsMobileNavOpen(false);
               }
@@ -106,12 +105,12 @@ export const MobileNavDrawer: React.FC = () => {
           </button>
 
           <div className="flex items-center gap-3 p-2 rounded-xl bg-slate-50 border border-slate-100">
-            <div className="w-9 h-9 rounded-full bg-indigo-600 text-white font-semibold flex items-center justify-center text-xs">
-              AM
+            <div className="w-9 h-9 rounded-full bg-[#EEF2FF] text-[#4F46E5] font-bold flex items-center justify-center text-xs">
+              AS
             </div>
             <div className="flex-1 min-w-0">
-              <p className="text-xs font-semibold text-slate-800 truncate">Alex Morgan</p>
-              <p className="text-[11px] text-slate-400 truncate">alex@focusboard.io</p>
+              <p className="text-xs font-semibold text-slate-800 truncate">Anjaiah Siddam</p>
+              <p className="text-[11px] text-slate-400 truncate">anji0522@focusboard.io</p>
             </div>
           </div>
         </div>

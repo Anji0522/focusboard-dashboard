@@ -1,9 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { X, Calendar, AlertCircle } from 'lucide-react';
 import { useTaskManager } from '../../context/TaskContext';
-import type { TaskCategory, TaskPriority, TaskStatus } from '../../types/task';
 
-export const TaskModal: React.FC = () => {
+export const TaskModal = () => {
   const { 
     isCreateModalOpen, 
     setIsCreateModalOpen, 
@@ -20,24 +19,24 @@ export const TaskModal: React.FC = () => {
   const [title, setTitle] = useState('');
   const [subtitle, setSubtitle] = useState('');
   const [description, setDescription] = useState('');
-  const [category, setCategory] = useState<TaskCategory>('Design');
-  const [status, setStatus] = useState<TaskStatus>('To do');
-  const [priority, setPriority] = useState<TaskPriority>('Medium');
+  const [category, setCategory] = useState('Design');
+  const [status, setStatus] = useState('To do');
+  const [priority, setPriority] = useState('Medium');
   const [dueDate, setDueDate] = useState('');
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState(null);
 
-  const titleInputRef = useRef<HTMLInputElement>(null);
+  const titleInputRef = useRef(null);
 
   // Prefill or reset form on open/close
   useEffect(() => {
     if (editingTask) {
-      setTitle(editingTask.title);
+      setTitle(editingTask.title || '');
       setSubtitle(editingTask.subtitle || '');
-      setDescription(editingTask.description);
-      setCategory(editingTask.category);
-      setStatus(editingTask.status);
-      setPriority(editingTask.priority);
-      setDueDate(editingTask.dueDate);
+      setDescription(editingTask.description || '');
+      setCategory(editingTask.category || 'Design');
+      setStatus(editingTask.status || 'To do');
+      setPriority(editingTask.priority || 'Medium');
+      setDueDate(editingTask.dueDate || '');
       setError(null);
     } else if (isCreateModalOpen) {
       setTitle('');
@@ -46,7 +45,6 @@ export const TaskModal: React.FC = () => {
       setCategory('Design');
       setStatus('To do');
       setPriority('Medium');
-      // Default due date: tomorrow
       const defaultDate = new Date();
       defaultDate.setDate(defaultDate.getDate() + 2);
       setDueDate(defaultDate.toISOString().split('T')[0]);
@@ -65,7 +63,7 @@ export const TaskModal: React.FC = () => {
 
   // Keyboard escape listener
   useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
+    const handleKeyDown = (e) => {
       if (e.key === 'Escape' && isOpen) {
         handleClose();
       }
@@ -80,7 +78,7 @@ export const TaskModal: React.FC = () => {
     setError(null);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
 
     const trimmedTitle = title.trim();
@@ -117,7 +115,7 @@ export const TaskModal: React.FC = () => {
 
   if (!isOpen) return null;
 
-  const categories: TaskCategory[] = [
+  const categories = [
     'Design',
     'Development',
     'Content',
@@ -126,8 +124,8 @@ export const TaskModal: React.FC = () => {
     'Operations',
   ];
 
-  const statuses: TaskStatus[] = ['To do', 'In progress', 'Completed'];
-  const priorities: TaskPriority[] = ['Low', 'Medium', 'High'];
+  const statuses = ['To do', 'In progress', 'Completed'];
+  const priorities = ['Low', 'Medium', 'High'];
 
   return (
     <div
@@ -163,7 +161,6 @@ export const TaskModal: React.FC = () => {
 
         {/* Form Body */}
         <form onSubmit={handleSubmit} className="px-6 py-6 space-y-4">
-          {/* Validation Error banner */}
           {error && (
             <div className="flex items-center gap-2 p-3 rounded-lg bg-rose-50 border border-rose-200 text-rose-700 text-xs sm:text-sm">
               <AlertCircle className="w-4 h-4 shrink-0 text-rose-500" />
@@ -226,7 +223,6 @@ export const TaskModal: React.FC = () => {
 
           {/* Category & Due Date Row */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {/* Category */}
             <div>
               <label htmlFor="task-category" className="block text-xs font-semibold text-[#111827] mb-1.5">
                 Category
@@ -234,7 +230,7 @@ export const TaskModal: React.FC = () => {
               <select
                 id="task-category"
                 value={category}
-                onChange={(e) => setCategory(e.target.value as TaskCategory)}
+                onChange={(e) => setCategory(e.target.value)}
                 className="w-full px-3.5 py-2.5 text-sm rounded-lg border border-[#E5E7EB] bg-white text-[#111827] focus:outline-none focus:border-[#4F46E5] focus:ring-1 focus:ring-[#4F46E5] cursor-pointer"
               >
                 {categories.map((cat) => (
@@ -245,7 +241,6 @@ export const TaskModal: React.FC = () => {
               </select>
             </div>
 
-            {/* Due Date */}
             <div>
               <label htmlFor="task-due-date" className="block text-xs font-semibold text-[#111827] mb-1.5">
                 Due date
@@ -272,7 +267,7 @@ export const TaskModal: React.FC = () => {
               <select
                 id="task-status"
                 value={status}
-                onChange={(e) => setStatus(e.target.value as TaskStatus)}
+                onChange={(e) => setStatus(e.target.value)}
                 className="w-full px-3.5 py-2.5 text-sm rounded-lg border border-[#E5E7EB] bg-white text-[#111827] focus:outline-none focus:border-[#4F46E5] focus:ring-1 focus:ring-[#4F46E5] cursor-pointer"
               >
                 {statuses.map((st) => (
@@ -290,7 +285,7 @@ export const TaskModal: React.FC = () => {
               <select
                 id="task-priority"
                 value={priority}
-                onChange={(e) => setPriority(e.target.value as TaskPriority)}
+                onChange={(e) => setPriority(e.target.value)}
                 className="w-full px-3.5 py-2.5 text-sm rounded-lg border border-[#E5E7EB] bg-white text-[#111827] focus:outline-none focus:border-[#4F46E5] focus:ring-1 focus:ring-[#4F46E5] cursor-pointer"
               >
                 {priorities.map((p) => (
@@ -302,12 +297,11 @@ export const TaskModal: React.FC = () => {
             </div>
           </div>
 
-          {/* Helper note */}
           <p className="text-xs text-[#9CA3AF] pt-1">
             * Required field
           </p>
 
-          {/* Action buttons matching Figma */}
+          {/* Action buttons */}
           <div className="pt-4 border-t border-[#F3F4F6] flex items-center justify-end gap-3">
             <button
               type="button"

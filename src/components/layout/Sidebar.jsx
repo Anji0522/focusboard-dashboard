@@ -9,11 +9,7 @@ import {
 } from 'lucide-react';
 import { useTaskManager } from '../../context/TaskContext';
 
-interface SidebarProps {
-  className?: string;
-}
-
-export const Sidebar: React.FC<SidebarProps> = ({ className = '' }) => {
+export const Sidebar = ({ className = '' }) => {
   const { stats, resetToDefaultData, setIsMobileNavOpen } = useTaskManager();
 
   const navItems = [
@@ -32,7 +28,6 @@ export const Sidebar: React.FC<SidebarProps> = ({ className = '' }) => {
       <div>
         {/* Brand Header */}
         <div className="h-20 flex items-center px-6 gap-3">
-          {/* Indigo Logo Square with 4 white squares */}
           <div className="w-9 h-9 rounded-xl bg-[#4F46E5] flex items-center justify-center shadow-sm shadow-indigo-200">
             <div className="grid grid-cols-2 gap-1 w-4 h-4">
               <div className="w-1.5 h-1.5 bg-white rounded-xs" />
@@ -99,14 +94,14 @@ export const Sidebar: React.FC<SidebarProps> = ({ className = '' }) => {
           <span>Reset Sample Tasks</span>
         </button>
 
-        {/* User Profile Card matching Figma JD avatar */}
+        {/* User Profile Card */}
         <div className="flex items-center gap-3 p-2 rounded-xl bg-slate-50 border border-slate-100">
           <div className="w-9 h-9 rounded-full bg-[#EEF2FF] text-[#4F46E5] font-bold text-xs flex items-center justify-center shrink-0">
-            JD
+            AS
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-xs font-semibold text-[#111827] truncate">John Doe</p>
-            <p className="text-[11px] text-[#9CA3AF] truncate">john@focusboard.io</p>
+            <p className="text-xs font-semibold text-[#111827] truncate">Anjaiah Siddam</p>
+            <p className="text-[11px] text-[#9CA3AF] truncate">anji0522@focusboard.io</p>
           </div>
           <Sparkles className="w-3.5 h-3.5 text-indigo-400 shrink-0" />
         </div>

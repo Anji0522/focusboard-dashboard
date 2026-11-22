@@ -2,7 +2,7 @@ import React from 'react';
 import { ChevronDown, Menu } from 'lucide-react';
 import { useTaskManager } from '../../context/TaskContext';
 
-export const Header: React.FC = () => {
+export const Header = () => {
   const { setIsMobileNavOpen } = useTaskManager();
 
   return (
@@ -49,10 +49,10 @@ export const Header: React.FC = () => {
           aria-label="User Profile"
         >
           <div className="w-8 h-8 rounded-full bg-[#EEF2FF] text-[#4F46E5] font-bold text-xs flex items-center justify-center ring-2 ring-white">
-            JD
+            AS
           </div>
           <span className="hidden sm:inline text-xs font-semibold text-[#111827]">
-            John Doe
+            Anjaiah Siddam
           </span>
           <ChevronDown className="w-3.5 h-3.5 text-[#9CA3AF]" />
         </button>

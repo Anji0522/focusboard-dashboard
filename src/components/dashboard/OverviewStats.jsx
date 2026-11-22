@@ -2,7 +2,7 @@ import React from 'react';
 import { ListTodo, Clock, CheckCircle2 } from 'lucide-react';
 import { useTaskManager } from '../../context/TaskContext';
 
-export const OverviewStats: React.FC = () => {
+export const OverviewStats = () => {
   const { stats } = useTaskManager();
 
   const cards = [

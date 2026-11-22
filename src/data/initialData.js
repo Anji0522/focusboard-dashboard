@@ -1,6 +1,4 @@
-import type { Task, FocusNoteSlide } from '../types/task';
-
-export const INITIAL_TASKS: Task[] = [
+export const INITIAL_TASKS = [
   {
     id: 'task-1',
     title: 'Design landing page',
@@ -80,7 +78,7 @@ export const INITIAL_TASKS: Task[] = [
   },
 ];
 
-export const FOCUS_NOTES_SLIDES: FocusNoteSlide[] = [
+export const FOCUS_NOTES_SLIDES = [
   {
     id: 'slide-1',
     tag: 'FOCUS NOTES',

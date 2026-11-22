@@ -2,20 +2,20 @@ import React, { useEffect, useState } from 'react';
 import { ChevronLeft, ChevronRight, Check } from 'lucide-react';
 import { useTaskManager } from '../../context/TaskContext';
 
-export const FocusNotesCarousel: React.FC = () => {
+export const FocusNotesCarousel = () => {
   const { carouselSlides, activeSlide, nextSlide, prevSlide, goToSlide } = useTaskManager();
-  const [touchStart, setTouchStart] = useState<number | null>(null);
-  const [touchEnd, setTouchEnd] = useState<number | null>(null);
+  const [touchStart, setTouchStart] = useState(null);
+  const [touchEnd, setTouchEnd] = useState(null);
 
   const currentSlide = carouselSlides[activeSlide];
 
   // Touch handlers for mobile swipe
-  const handleTouchStart = (e: React.TouchEvent) => {
+  const handleTouchStart = (e) => {
     setTouchEnd(null);
     setTouchStart(e.targetTouches[0].clientX);
   };
 
-  const handleTouchMove = (e: React.TouchEvent) => {
+  const handleTouchMove = (e) => {
     setTouchEnd(e.targetTouches[0].clientX);
   };
 
@@ -31,8 +31,8 @@ export const FocusNotesCarousel: React.FC = () => {
 
   // Keyboard navigation support
   useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (['INPUT', 'TEXTAREA'].includes((e.target as HTMLElement).tagName)) return;
+    const handleKeyDown = (e) => {
+      if (['INPUT', 'TEXTAREA'].includes(e.target.tagName)) return;
       if (e.key === 'ArrowLeft') {
         prevSlide();
       } else if (e.key === 'ArrowRight') {

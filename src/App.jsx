@@ -11,7 +11,7 @@ import { DeleteConfirmModal } from './components/modals/DeleteConfirmModal';
 import { MobileNavDrawer } from './components/modals/MobileNavDrawer';
 import { MobileBottomNav } from './components/layout/MobileBottomNav';
 
-const DashboardContent: React.FC = () => {
+const DashboardContent = () => {
   return (
     <div className="min-h-screen bg-[#F8FAFC] flex flex-col lg:flex-row font-sans text-[#111827]">
       {/* 1. Left Sidebar Navigation (Desktop) */}

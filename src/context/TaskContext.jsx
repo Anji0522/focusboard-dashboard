@@ -1,47 +1,13 @@
 import React, { createContext, useContext, useState, useEffect, useMemo } from 'react';
-import type { ReactNode } from 'react';
-import type { Task, TaskStats, FilterState, FocusNoteSlide, TaskStatus } from '../types/task';
 import { INITIAL_TASKS, FOCUS_NOTES_SLIDES } from '../data/initialData';
 
 const LOCAL_STORAGE_KEY = 'focusboard_tasks_v2';
 
-interface TaskContextType {
-  tasks: Task[];
-  filteredTasks: Task[];
-  stats: TaskStats;
-  filters: FilterState;
-  setFilters: React.Dispatch<React.SetStateAction<FilterState>>;
-  updateFilter: <K extends keyof FilterState>(key: K, value: FilterState[K]) => void;
-  createTask: (taskData: Omit<Task, 'id' | 'createdAt'>) => void;
-  updateTask: (id: string, updates: Partial<Omit<Task, 'id' | 'createdAt'>>) => void;
-  deleteTask: (id: string) => void;
-  updateTaskStatus: (id: string, newStatus: TaskStatus) => void;
-  cycleTaskStatus: (id: string) => void;
-  resetToDefaultData: () => void;
-  
-  // Carousel state
-  carouselSlides: FocusNoteSlide[];
-  activeSlide: number;
-  nextSlide: () => void;
-  prevSlide: () => void;
-  goToSlide: (index: number) => void;
+const TaskContext = createContext(null);
 
-  // Modal / UI state
-  isCreateModalOpen: boolean;
-  setIsCreateModalOpen: (open: boolean) => void;
-  editingTask: Task | null;
-  setEditingTask: (task: Task | null) => void;
-  deletingTask: Task | null;
-  setDeletingTask: (task: Task | null) => void;
-  isMobileNavOpen: boolean;
-  setIsMobileNavOpen: (open: boolean) => void;
-}
-
-const TaskContext = createContext<TaskContextType | undefined>(undefined);
-
-export const TaskProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+export const TaskProvider = ({ children }) => {
   // Load tasks from localStorage or fall back to INITIAL_TASKS
-  const [tasks, setTasks] = useState<Task[]>(() => {
+  const [tasks, setTasks] = useState(() => {
     try {
       const stored = localStorage.getItem(LOCAL_STORAGE_KEY);
       if (stored) {
@@ -66,7 +32,7 @@ export const TaskProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   }, [tasks]);
 
   // Filters state
-  const [filters, setFilters] = useState<FilterState>({
+  const [filters, setFilters] = useState({
     searchQuery: '',
     status: 'All',
     priority: 'All',
@@ -74,12 +40,12 @@ export const TaskProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     sortBy: 'dueDateAsc',
   });
 
-  const updateFilter = <K extends keyof FilterState>(key: K, value: FilterState[K]) => {
-    setFilters(prev => ({ ...prev, [key]: value }));
+  const updateFilter = (key, value) => {
+    setFilters((prev) => ({ ...prev, [key]: value }));
   };
 
   // Carousel state
-  const [activeSlide, setActiveSlide] = useState<number>(0);
+  const [activeSlide, setActiveSlide] = useState(0);
   const carouselSlides = FOCUS_NOTES_SLIDES;
 
   const nextSlide = () => {
@@ -90,7 +56,7 @@ export const TaskProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     setActiveSlide((prev) => (prev - 1 + carouselSlides.length) % carouselSlides.length);
   };
 
-  const goToSlide = (index: number) => {
+  const goToSlide = (index) => {
     if (index >= 0 && index < carouselSlides.length) {
       setActiveSlide(index);
     }
@@ -98,12 +64,12 @@ export const TaskProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   // Modal states
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
-  const [editingTask, setEditingTask] = useState<Task | null>(null);
-  const [deletingTask, setDeletingTask] = useState<Task | null>(null);
+  const [editingTask, setEditingTask] = useState(null);
+  const [deletingTask, setDeletingTask] = useState(null);
   const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
 
   // Derived Statistics (DO NOT hardcode)
-  const stats: TaskStats = useMemo(() => {
+  const stats = useMemo(() => {
     const total = tasks.length;
     const todo = tasks.filter((t) => t.status === 'To do').length;
     const inProgress = tasks.filter((t) => t.status === 'In progress').length;
@@ -126,10 +92,10 @@ export const TaskProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     const filtered = tasks.filter((task) => {
       // Search filter (title, subtitle or description)
       if (query) {
-        const matchesTitle = task.title.toLowerCase().includes(query);
+        const matchesTitle = task.title?.toLowerCase().includes(query);
         const matchesSub = task.subtitle?.toLowerCase().includes(query) ?? false;
-        const matchesDesc = task.description.toLowerCase().includes(query);
-        const matchesCat = task.category.toLowerCase().includes(query);
+        const matchesDesc = task.description?.toLowerCase().includes(query);
+        const matchesCat = task.category?.toLowerCase().includes(query);
         if (!matchesTitle && !matchesSub && !matchesDesc && !matchesCat) return false;
       }
 
@@ -154,13 +120,13 @@ export const TaskProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     // Sorting
     return [...filtered].sort((a, b) => {
       if (filters.sortBy === 'dueDateAsc') {
-        return a.dueDate.localeCompare(b.dueDate);
+        return (a.dueDate || '').localeCompare(b.dueDate || '');
       }
       if (filters.sortBy === 'dueDateDesc') {
-        return b.dueDate.localeCompare(a.dueDate);
+        return (b.dueDate || '').localeCompare(a.dueDate || '');
       }
       if (filters.sortBy === 'priorityDesc') {
-        const weight: Record<string, number> = { High: 3, Medium: 2, Low: 1 };
+        const weight = { High: 3, Medium: 2, Low: 1 };
         return (weight[b.priority] || 0) - (weight[a.priority] || 0);
       }
       if (filters.sortBy === 'newest') {
@@ -171,8 +137,8 @@ export const TaskProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   }, [tasks, filters]);
 
   // State Mutations (Immutable)
-  const createTask = (taskData: Omit<Task, 'id' | 'createdAt'>) => {
-    const newTask: Task = {
+  const createTask = (taskData) => {
+    const newTask = {
       ...taskData,
       id: `task-${Date.now()}-${Math.random().toString(36).substring(2, 7)}`,
       createdAt: new Date().toISOString(),
@@ -180,27 +146,27 @@ export const TaskProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     setTasks((prev) => [newTask, ...prev]);
   };
 
-  const updateTask = (id: string, updates: Partial<Omit<Task, 'id' | 'createdAt'>>) => {
+  const updateTask = (id, updates) => {
     setTasks((prev) =>
       prev.map((task) => (task.id === id ? { ...task, ...updates } : task))
     );
   };
 
-  const deleteTask = (id: string) => {
+  const deleteTask = (id) => {
     setTasks((prev) => prev.filter((task) => task.id !== id));
     if (editingTask?.id === id) {
       setEditingTask(null);
     }
   };
 
-  const updateTaskStatus = (id: string, newStatus: TaskStatus) => {
+  const updateTaskStatus = (id, newStatus) => {
     setTasks((prev) =>
       prev.map((task) => (task.id === id ? { ...task, status: newStatus } : task))
     );
   };
 
-  const cycleTaskStatus = (id: string) => {
-    const cycleMap: Record<TaskStatus, TaskStatus> = {
+  const cycleTaskStatus = (id) => {
+    const cycleMap = {
       'To do': 'In progress',
       'In progress': 'Completed',
       'Completed': 'To do',

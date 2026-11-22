@@ -2,13 +2,13 @@ import React, { useEffect } from 'react';
 import { AlertTriangle, Trash2 } from 'lucide-react';
 import { useTaskManager } from '../../context/TaskContext';
 
-export const DeleteConfirmModal: React.FC = () => {
+export const DeleteConfirmModal = () => {
   const { deletingTask, setDeletingTask, deleteTask } = useTaskManager();
 
   const isOpen = deletingTask !== null;
 
   useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
+    const handleKeyDown = (e) => {
       if (e.key === 'Escape' && isOpen) {
         setDeletingTask(null);
       }

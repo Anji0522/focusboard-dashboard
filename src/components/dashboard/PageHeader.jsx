@@ -2,7 +2,7 @@ import React from 'react';
 import { Plus } from 'lucide-react';
 import { useTaskManager } from '../../context/TaskContext';
 
-export const PageHeader: React.FC = () => {
+export const PageHeader = () => {
   const { setIsCreateModalOpen } = useTaskManager();
 
   return (

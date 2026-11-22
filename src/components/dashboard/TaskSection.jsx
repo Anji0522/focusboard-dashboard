@@ -12,9 +12,8 @@ import {
   Sparkles 
 } from 'lucide-react';
 import { useTaskManager } from '../../context/TaskContext';
-import type { Task, TaskPriority, TaskStatus } from '../../types/task';
 
-export const TaskSection: React.FC = () => {
+export const TaskSection = () => {
   const { 
     tasks, 
     filteredTasks, 
@@ -27,17 +26,17 @@ export const TaskSection: React.FC = () => {
     setIsCreateModalOpen 
   } = useTaskManager();
 
-  const [activeMenuId, setActiveMenuId] = useState<string | null>(null);
+  const [activeMenuId, setActiveMenuId] = useState(null);
 
   // Status tabs matching Figma
-  const tabs: { label: string; value: 'All' | TaskStatus; count?: number }[] = [
+  const tabs = [
     { label: `All tasks ${tasks.length}`, value: 'All' },
     { label: 'In progress', value: 'In progress' },
     { label: 'Completed', value: 'Completed' },
   ];
 
   // Helper for Category Tag colors matching Figma
-  const getCategoryBadgeClass = (category: string) => {
+  const getCategoryBadgeClass = (category) => {
     switch (category) {
       case 'Design':
         return 'bg-[#EEF2FF] text-[#4F46E5]';
@@ -53,7 +52,7 @@ export const TaskSection: React.FC = () => {
   };
 
   // Helper for Priority Badge colors matching Figma
-  const getPriorityBadgeClass = (priority: TaskPriority) => {
+  const getPriorityBadgeClass = (priority) => {
     switch (priority) {
       case 'High':
         return 'bg-[#FEF3C7] text-[#D97706]';
@@ -61,11 +60,13 @@ export const TaskSection: React.FC = () => {
         return 'bg-[#D1FAE5] text-[#059669]';
       case 'Low':
         return 'bg-[#E0F2FE] text-[#0284C7]';
+      default:
+        return 'bg-slate-100 text-slate-700';
     }
   };
 
   // Helper to format due date as "Nov 22", "Nov 24", etc.
-  const formatShortDate = (dateString: string) => {
+  const formatShortDate = (dateString) => {
     try {
       const date = new Date(dateString + 'T00:00:00');
       return new Intl.DateTimeFormat('en-US', {
@@ -168,7 +169,7 @@ export const TaskSection: React.FC = () => {
           <div className="relative shrink-0">
             <select
               value={filters.priority}
-              onChange={(e) => updateFilter('priority', e.target.value as 'All' | TaskPriority)}
+              onChange={(e) => updateFilter('priority', e.target.value)}
               className="appearance-none bg-white border border-[#E5E7EB] rounded-lg pl-3 pr-7 py-1.5 text-xs sm:text-sm font-medium text-[#6B7280] focus:outline-none focus:border-[#4F46E5] cursor-pointer"
               aria-label="Filter tasks by priority"
             >
@@ -204,7 +205,7 @@ export const TaskSection: React.FC = () => {
             </button>
           </div>
         ) : (
-          filteredTasks.map((task: Task) => {
+          filteredTasks.map((task) => {
             const isCompleted = task.status === 'Completed';
             const categoryClass = getCategoryBadgeClass(task.category);
             const priorityClass = getPriorityBadgeClass(task.priority);

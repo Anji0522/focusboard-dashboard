@@ -2,7 +2,7 @@ import React from 'react';
 import { LayoutGrid, ListTodo, Calendar, Settings } from 'lucide-react';
 import { useTaskManager } from '../../context/TaskContext';
 
-export const MobileBottomNav: React.FC = () => {
+export const MobileBottomNav = () => {
   const { updateFilter } = useTaskManager();
 
   const items = [
