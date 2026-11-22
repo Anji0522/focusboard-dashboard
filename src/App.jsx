@@ -1,17 +1,54 @@
 import React from 'react';
-import { TaskProvider } from './context/TaskContext';
+import { TaskProvider, useTaskManager } from './context/TaskContext';
 import { Sidebar } from './components/layout/Sidebar';
 import { Header } from './components/layout/Header';
 import { PageHeader } from './components/dashboard/PageHeader';
 import { FocusNotesCarousel } from './components/dashboard/FocusNotesCarousel';
 import { OverviewStats } from './components/dashboard/OverviewStats';
 import { TaskSection } from './components/dashboard/TaskSection';
+import { CalendarView } from './components/dashboard/CalendarView';
+import { SettingsView } from './components/dashboard/SettingsView';
 import { TaskModal } from './components/modals/TaskModal';
 import { DeleteConfirmModal } from './components/modals/DeleteConfirmModal';
 import { MobileNavDrawer } from './components/modals/MobileNavDrawer';
 import { MobileBottomNav } from './components/layout/MobileBottomNav';
 
 const DashboardContent = () => {
+  const { activeNav } = useTaskManager();
+
+  const renderActiveView = () => {
+    switch (activeNav) {
+      case 'My tasks':
+        return (
+          <div className="space-y-6">
+            <PageHeader />
+            <TaskSection />
+          </div>
+        );
+      case 'Calendar':
+        return <CalendarView />;
+      case 'Settings':
+        return <SettingsView />;
+      case 'Overview':
+      default:
+        return (
+          <div className="space-y-6">
+            {/* Page Greeting & Action Header */}
+            <PageHeader />
+
+            {/* Focus Notes Carousel Banner (1106 x 152 px) */}
+            <FocusNotesCarousel />
+
+            {/* Overview Statistics Cards */}
+            <OverviewStats />
+
+            {/* My Tasks Section */}
+            <TaskSection />
+          </div>
+        );
+    }
+  };
+
   return (
     <div className="min-h-screen bg-[#F8FAFC] flex flex-col lg:flex-row font-sans text-[#111827]">
       {/* 1. Left Sidebar Navigation (Desktop) */}
@@ -23,18 +60,8 @@ const DashboardContent = () => {
         <Header />
 
         {/* Dashboard Main Canvas */}
-        <main className="flex-1 px-4 sm:px-8 py-6 max-w-[1200px] w-full mx-auto space-y-6">
-          {/* Page Greeting & Action Header */}
-          <PageHeader />
-
-          {/* Focus Notes Carousel Banner (1106 x 152 px) */}
-          <FocusNotesCarousel />
-
-          {/* Overview Statistics Cards */}
-          <OverviewStats />
-
-          {/* My Tasks Section (Tabs, Search, Priority Filters & Rows) */}
-          <TaskSection />
+        <main className="flex-1 px-4 sm:px-8 py-6 max-w-[1200px] w-full mx-auto">
+          {renderActiveView()}
         </main>
       </div>
 

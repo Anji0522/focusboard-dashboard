@@ -3,7 +3,7 @@ import { X, Sparkles, LayoutGrid, ListTodo, Calendar, Settings, RotateCcw } from
 import { useTaskManager } from '../../context/TaskContext';
 
 export const MobileNavDrawer = () => {
-  const { isMobileNavOpen, setIsMobileNavOpen, stats, resetToDefaultData } = useTaskManager();
+  const { activeNav, setActiveNav, isMobileNavOpen, setIsMobileNavOpen, stats, resetToDefaultData } = useTaskManager();
 
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -18,11 +18,16 @@ export const MobileNavDrawer = () => {
   if (!isMobileNavOpen) return null;
 
   const navItems = [
-    { label: 'Overview', icon: LayoutGrid, active: true, count: null },
-    { label: 'My tasks', icon: ListTodo, active: false, count: stats.total },
-    { label: 'Calendar', icon: Calendar, active: false, count: null, placeholder: true },
-    { label: 'Settings', icon: Settings, active: false, count: null, placeholder: true },
+    { label: 'Overview', icon: LayoutGrid, count: null },
+    { label: 'My tasks', icon: ListTodo, count: stats.total },
+    { label: 'Calendar', icon: Calendar, count: null },
+    { label: 'Settings', icon: Settings, count: null },
   ];
+
+  const handleItemClick = (label) => {
+    setActiveNav(label);
+    setIsMobileNavOpen(false);
+  };
 
   return (
     <div
@@ -39,7 +44,10 @@ export const MobileNavDrawer = () => {
         <div>
           {/* Drawer Header */}
           <div className="h-16 flex items-center justify-between px-6 border-b border-slate-100">
-            <div className="flex items-center gap-3">
+            <div 
+              onClick={() => handleItemClick('Overview')}
+              className="flex items-center gap-3 cursor-pointer"
+            >
               <div className="w-8 h-8 rounded-xl bg-[#4F46E5] flex items-center justify-center text-white shadow-sm">
                 <Sparkles className="w-4 h-4" />
               </div>
@@ -48,7 +56,7 @@ export const MobileNavDrawer = () => {
             <button
               type="button"
               onClick={() => setIsMobileNavOpen(false)}
-              className="p-1.5 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-100"
+              className="p-1.5 text-slate-400 hover:text-slate-600 rounded-lg hover:bg-slate-100 cursor-pointer"
               aria-label="Close menu"
             >
               <X className="w-5 h-5" />
@@ -62,19 +70,21 @@ export const MobileNavDrawer = () => {
             </div>
             {navItems.map((item) => {
               const Icon = item.icon;
+              const isActive = activeNav === item.label;
+
               return (
                 <button
                   key={item.label}
                   type="button"
-                  onClick={() => setIsMobileNavOpen(false)}
-                  className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm font-medium transition-colors ${
-                    item.active
+                  onClick={() => handleItemClick(item.label)}
+                  className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm font-medium transition-colors cursor-pointer ${
+                    isActive
                       ? 'bg-indigo-50 text-indigo-700 font-semibold'
                       : 'text-slate-600 hover:text-slate-900 hover:bg-slate-50'
                   }`}
                 >
                   <div className="flex items-center gap-3">
-                    <Icon className={`w-4 h-4 ${item.active ? 'text-indigo-600' : 'text-slate-400'}`} />
+                    <Icon className={`w-4 h-4 ${isActive ? 'text-indigo-600' : 'text-slate-400'}`} />
                     <span>{item.label}</span>
                   </div>
                   {item.count !== null && (
@@ -98,13 +108,16 @@ export const MobileNavDrawer = () => {
                 setIsMobileNavOpen(false);
               }
             }}
-            className="w-full flex items-center gap-2 px-3 py-2 text-xs text-slate-500 hover:text-indigo-600 hover:bg-indigo-50/50 rounded-lg transition-colors"
+            className="w-full flex items-center gap-2 px-3 py-2 text-xs text-slate-500 hover:text-indigo-600 hover:bg-indigo-50/50 rounded-lg transition-colors cursor-pointer"
           >
             <RotateCcw className="w-3.5 h-3.5" />
             <span>Reset Sample Tasks</span>
           </button>
 
-          <div className="flex items-center gap-3 p-2 rounded-xl bg-slate-50 border border-slate-100">
+          <div 
+            onClick={() => handleItemClick('Settings')}
+            className="flex items-center gap-3 p-2 rounded-xl bg-slate-50 border border-slate-100 cursor-pointer"
+          >
             <div className="w-9 h-9 rounded-full bg-[#EEF2FF] text-[#4F46E5] font-bold flex items-center justify-center text-xs">
               AS
             </div>

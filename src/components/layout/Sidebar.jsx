@@ -10,14 +10,19 @@ import {
 import { useTaskManager } from '../../context/TaskContext';
 
 export const Sidebar = ({ className = '' }) => {
-  const { stats, resetToDefaultData, setIsMobileNavOpen } = useTaskManager();
+  const { activeNav, setActiveNav, stats, resetToDefaultData, setIsMobileNavOpen } = useTaskManager();
 
   const navItems = [
-    { label: 'Overview', icon: LayoutGrid, active: true, count: null },
-    { label: 'My tasks', icon: ListTodo, active: false, count: stats.total },
-    { label: 'Calendar', icon: Calendar, active: false, count: null, placeholder: true },
-    { label: 'Settings', icon: Settings, active: false, count: null, placeholder: true },
+    { label: 'Overview', icon: LayoutGrid, count: null },
+    { label: 'My tasks', icon: ListTodo, count: stats.total },
+    { label: 'Calendar', icon: Calendar, count: null },
+    { label: 'Settings', icon: Settings, count: null },
   ];
+
+  const handleNavClick = (label) => {
+    setActiveNav(label);
+    if (setIsMobileNavOpen) setIsMobileNavOpen(false);
+  };
 
   return (
     <aside 
@@ -27,7 +32,10 @@ export const Sidebar = ({ className = '' }) => {
       {/* Top Branding & Navigation */}
       <div>
         {/* Brand Header */}
-        <div className="h-20 flex items-center px-6 gap-3">
+        <div 
+          onClick={() => handleNavClick('Overview')}
+          className="h-20 flex items-center px-6 gap-3 cursor-pointer"
+        >
           <div className="w-9 h-9 rounded-xl bg-[#4F46E5] flex items-center justify-center shadow-sm shadow-indigo-200">
             <div className="grid grid-cols-2 gap-1 w-4 h-4">
               <div className="w-1.5 h-1.5 bg-white rounded-xs" />
@@ -49,24 +57,32 @@ export const Sidebar = ({ className = '' }) => {
           <nav className="space-y-1" aria-label="Main menu">
             {navItems.map((item) => {
               const Icon = item.icon;
+              const isActive = activeNav === item.label;
+
               return (
                 <button
                   key={item.label}
                   type="button"
-                  onClick={() => setIsMobileNavOpen(false)}
-                  className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm font-medium transition-colors ${
-                    item.active
+                  onClick={() => handleNavClick(item.label)}
+                  className={`w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm font-medium transition-colors cursor-pointer ${
+                    isActive
                       ? 'bg-[#EEF2FF] text-[#4F46E5] font-semibold'
                       : 'text-[#6B7280] hover:text-[#111827] hover:bg-slate-50'
                   }`}
-                  title={item.placeholder ? `${item.label} (Visual placeholder)` : item.label}
+                  aria-current={isActive ? 'page' : undefined}
                 >
                   <div className="flex items-center gap-3">
-                    <Icon className={`w-4 h-4 ${item.active ? 'text-[#4F46E5]' : 'text-[#9CA3AF]'}`} />
+                    <Icon className={`w-4 h-4 ${isActive ? 'text-[#4F46E5]' : 'text-[#9CA3AF]'}`} />
                     <span>{item.label}</span>
                   </div>
                   {item.count !== null && (
-                    <span className="text-xs px-2 py-0.5 rounded-full bg-slate-100 text-[#6B7280] font-medium">
+                    <span
+                      className={`text-xs px-2 py-0.5 rounded-full font-medium ${
+                        isActive
+                          ? 'bg-indigo-100 text-[#4F46E5]'
+                          : 'bg-slate-100 text-[#6B7280]'
+                      }`}
+                    >
                       {item.count}
                     </span>
                   )}
@@ -95,7 +111,11 @@ export const Sidebar = ({ className = '' }) => {
         </button>
 
         {/* User Profile Card */}
-        <div className="flex items-center gap-3 p-2 rounded-xl bg-slate-50 border border-slate-100">
+        <div 
+          onClick={() => handleNavClick('Settings')}
+          className="flex items-center gap-3 p-2 rounded-xl bg-slate-50 border border-slate-100 cursor-pointer hover:bg-slate-100/70 transition-colors"
+          title="View Settings & Profile"
+        >
           <div className="w-9 h-9 rounded-full bg-[#EEF2FF] text-[#4F46E5] font-bold text-xs flex items-center justify-center shrink-0">
             AS
           </div>

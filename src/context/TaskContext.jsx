@@ -6,6 +6,9 @@ const LOCAL_STORAGE_KEY = 'focusboard_tasks_v2';
 const TaskContext = createContext(null);
 
 export const TaskProvider = ({ children }) => {
+  // Navigation View State ('Overview', 'My tasks', 'Calendar', 'Settings')
+  const [activeNav, setActiveNav] = useState('Overview');
+
   // Load tasks from localStorage or fall back to INITIAL_TASKS
   const [tasks, setTasks] = useState(() => {
     try {
@@ -190,6 +193,8 @@ export const TaskProvider = ({ children }) => {
   return (
     <TaskContext.Provider
       value={{
+        activeNav,
+        setActiveNav,
         tasks,
         filteredTasks,
         stats,
