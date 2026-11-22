@@ -6,10 +6,10 @@ A responsive, pixel-perfect task management dashboard developed for the **FocusB
 
 ## 📋 Final Submission Template
 
-- **Candidate**: FocusBoard Developer Candidate
+- **Candidate**: Anjaiah Siddam (Anji0522)
 - **Framework**: React 19 + TypeScript + Vite + Tailwind CSS
-- **Hosting URL**: [https://focusboard-dashboard.vercel.app](https://focusboard-dashboard.vercel.app) *(Deploy instructions below)*
-- **GitHub Source**: [https://github.com/siddarth/focusboard-dashboard](https://github.com/siddarth/focusboard-dashboard)
+- **Hosting URL**: [https://focusboard-dashboard.vercel.app](https://focusboard-dashboard.vercel.app)
+- **GitHub Source**: [https://github.com/Anji0522/focusboard-dashboard](https://github.com/Anji0522/focusboard-dashboard)
 - **Notes / Pending Work**: Fully functional single-user dashboard delivered. All acceptance criteria, carousel slides, modal validations, local storage persistence, and responsive breakpoints (390px, 768px, 1440px) verified.
 
 ---
@@ -83,7 +83,7 @@ A responsive, pixel-perfect task management dashboard developed for the **FocusB
 ### Installation
 ```bash
 # Clone the repository
-git clone https://github.com/siddarth/focusboard-dashboard.git
+git clone https://github.com/Anji0522/focusboard-dashboard.git
 cd focusboard-dashboard
 
 # Install dependencies
